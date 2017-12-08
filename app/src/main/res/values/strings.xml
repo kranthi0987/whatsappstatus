@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright (c) 2017. this file is created or edited by sanjay
+  ~ mail us to kranthi0987@gmail.com
+  -->
+
 <resources>
     <string name="app_name">whatsappstatus</string>
 
@@ -12,4 +17,5 @@
     <string name="title_activity_check__updates">Check_Updates</string>
     <string name="settings_check_for_updates">status saver update</string>
     <string name="settings_check_for_updates_summary">check update</string>
+    <string name="strFileProviderPackage">shareintent</string>
 </resources>
