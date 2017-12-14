@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017. this file is created or edited by sanjay
+ * mail us to kranthi0987@gmail.com
+ */
+
 package com.sanjay.whatsappstatus;
 
 import android.os.Bundle;
@@ -29,8 +34,8 @@ public class Check_Updates extends PreferenceActivity {
                 new AppUpdater(Check_Updates.this)
                         //.setUpdateFrom(UpdateFrom.GITHUB)
                         //.setGitHubUserAndRepo("javiersantos", "AppUpdater")
-                        .setUpdateFrom(UpdateFrom.XML)
-                        .setUpdateXML("https://raw.githubusercontent.com/javiersantos/AppUpdater/master/app/update-changelog.xml")
+                        .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                        .setUpdateXML("https://play.google.com/store/apps/details?id=com.sanjay.whatsappstatus&hl=en")
                         .setDisplay(Display.DIALOG)
                         .showAppUpdated(true)
                         .start();
@@ -43,7 +48,7 @@ public class Check_Updates extends PreferenceActivity {
     @Override
     public void setContentView(int layoutResID) {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_check__updates, new LinearLayout(this), false);
-        Toolbar toolbar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        Toolbar toolbar = contentView.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.action_settings);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, android.R.color.white));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -53,7 +58,7 @@ public class Check_Updates extends PreferenceActivity {
             }
         });
 
-        ViewGroup contentWrapper = (ViewGroup) contentView.findViewById(R.id.content_wrapper);
+        ViewGroup contentWrapper = contentView.findViewById(R.id.content_wrapper);
         LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true);
         getWindow().setContentView(contentView);
 

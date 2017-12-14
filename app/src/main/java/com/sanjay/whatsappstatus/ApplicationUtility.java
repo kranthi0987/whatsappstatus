@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017. this file is created or edited by sanjay
+ * mail us to kranthi0987@gmail.com
+ */
+
 package com.sanjay.whatsappstatus;
 
 import android.content.Context;
@@ -28,5 +33,6 @@ public class ApplicationUtility {
         }
         return flag;
     }
+
 
 }

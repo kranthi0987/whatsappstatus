@@ -5,7 +5,6 @@
 
 package com.sanjay.whatsappstatus;
 
-import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,6 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.github.clans.fab.FloatingActionMenu;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.snatik.storage.Storage;
 
 import java.io.File;
@@ -23,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Viewimage extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     ImageView iv2;
     String toPath = Environment.getExternalStorageDirectory() + "/whatsapp status saver/";
     String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
@@ -30,11 +32,14 @@ public class Viewimage extends AppCompatActivity {
     private com.github.clans.fab.FloatingActionButton fab1;
     private com.github.clans.fab.FloatingActionButton fab2;
     private com.github.clans.fab.FloatingActionButton fab3;
-
+    private AdView mAdView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewimage);
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         final Storage storage = new Storage(getApplicationContext());
         //Intent i= getIntent();
         //File f= i.getExtras().getParcelable("img");
@@ -54,7 +59,7 @@ public class Viewimage extends AppCompatActivity {
         menuRed = findViewById(R.id.fab);
         fab1 = findViewById(R.id.fab_copy);
         fab2 = findViewById(R.id.fab_delete);
-        fab3 = findViewById(R.id.fab_share);
+//        fab3 = findViewById(R.id.fab_share);
         FloatingActionMenu fab = findViewById(R.id.fab);
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,14 +96,20 @@ public class Viewimage extends AppCompatActivity {
                 snackbar.show();
             }
         });
-        fab3.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("WrongConstant")
-            @Override
-            public void onClick(View view) {
-                Log.i("share", "fab3 " + f);
-
-
-            }
-        });
+//        fab3.setOnClickListener(new View.OnClickListener() {
+//            @SuppressLint("WrongConstant")
+//            @Override
+//            public void onClick(View view) {
+//                Log.i("share", "fab3 " + f);
+//                Bitmap bmp = BitmapFactory.decodeFile(f);
+//                Intent intent = new Intent(Intent.ACTION_SEND);
+//                intent.setType("image/*");
+//                intent.putExtra(Intent.EXTRA_STREAM, f);
+//
+//                startActivity(Intent.createChooser(intent, "Share Image"));
+//
+//            }
+//        });
     }
+
 }

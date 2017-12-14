@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2017. this file is created or edited by sanjay
+ * mail us to kranthi0987@gmail.com
+ */
+
 package com.sanjay.whatsappstatus;
 
 import android.Manifest;
@@ -20,6 +25,7 @@ import java.util.TimerTask;
 
 public class Splash_activity extends AppCompatActivity {
     PermissionListener permissionlistener;
+
     @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,21 +36,18 @@ public class Splash_activity extends AppCompatActivity {
             checkPerm();
             createDirectory();
             return;
-        }
-        else{
+        } else{
             Toast.makeText(Splash_activity.this,
                     "check the permisions in the settings", 2000).show();
         }
-
-
-
     }
+
     public void createDirectory(){
         Storage storage = new Storage(getApplicationContext());
         String path= Environment.getExternalStorageDirectory() + "/whatsapp status saver/";
         if(storage.createDirectory(path, true)){
-            Toast.makeText(Splash_activity.this,
-                    "directory created", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Splash_activity.this,
+//                    "directory created", Toast.LENGTH_SHORT).show();
             Log.i("", "createDirectory: created");
         }else{
             Toast.makeText(Splash_activity.this,
@@ -52,12 +55,13 @@ public class Splash_activity extends AppCompatActivity {
             Log.e("", "createDirectory: failed to created" );
         }
     }
+
     private void checkPerm() {
         PermissionListener permissionlistener = new PermissionListener() {
             @SuppressLint("WrongConstant")
             @Override
             public void onPermissionGranted() {
-                Toast.makeText(Splash_activity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Splash_activity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
                 Timer t = new Timer();
                 boolean checkConnection=new ApplicationUtility().checkConnection(Splash_activity.this);
                 if (checkConnection) {
@@ -94,9 +98,6 @@ public class Splash_activity extends AppCompatActivity {
         }
 
     }
-
-
-
 
 
 }

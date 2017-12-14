@@ -2,7 +2,6 @@
   ~ Copyright (c) 2017. this file is created or edited by sanjay
   ~ mail us to kranthi0987@gmail.com
   -->
-
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sanjay.whatsappstatus">
 
@@ -10,6 +9,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +20,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".Splash_activity"
             android:label="@string/app_name"
@@ -39,8 +38,14 @@
             android:name=".Check_Updates"
             android:label="@string/title_activity_check__updates"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Viewimage"></activity>
-
+        <activity android:name=".Viewimage" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".About_activity"
+            android:label="@string/title_activity_about_activity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
