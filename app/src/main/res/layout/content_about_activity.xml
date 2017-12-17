@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:text="@string/thanks_for_installed_our_app_if_any_queries_just_mail_us_kranthi0987_gmail_com"
-        android:textSize="10dp"
+        android:textSize="10sp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"

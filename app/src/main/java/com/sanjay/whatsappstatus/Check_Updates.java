@@ -25,9 +25,7 @@ public class Check_Updates extends PreferenceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
-
         Preference prefCheckForUpdates = findPreference("prefCheckForUpdates");
-
         prefCheckForUpdates.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -42,9 +40,7 @@ public class Check_Updates extends PreferenceActivity {
                 return true;
             }
         });
-
     }
-
     @Override
     public void setContentView(int layoutResID) {
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(R.layout.activity_check__updates, new LinearLayout(this), false);

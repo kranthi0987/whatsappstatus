@@ -8,29 +8,25 @@ package com.sanjay.whatsappstatus;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
-public class About_activity extends AppCompatActivity {
+import tcking.github.com.giraffeplayer2.VideoView;
+
+public class Video_activity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about_activity);
+        setContentView(R.layout.activity_video_activity);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
-    }
-    @Override
-    public void onBackPressed() {
-
-        super.onBackPressed();
+        Log.d("", "yessss");
+        final String f = getIntent().getStringExtra("mp4");
+        VideoView videoView = findViewById(R.id.video_view);
+        videoView.setVideoPath(f).getPlayer().start();
 
     }
 
 }
+
