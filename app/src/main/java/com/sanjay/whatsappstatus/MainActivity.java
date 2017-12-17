@@ -5,10 +5,14 @@
 
 package com.sanjay.whatsappstatus;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +38,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
+import static com.sanjay.whatsappstatus.util.util.getMimeType;
 import static com.sanjay.whatsappstatus.util.util.sendFeedback;
 
 
@@ -50,6 +56,16 @@ public class MainActivity extends AppCompatActivity
     private File[] listFile;
     private AdView mAdView;
     private FirebaseAnalytics mFirebaseAnalytics;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            Log.d("", "onActivityResult: " + resultCode);
+            super.onRestart();
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,9 +132,17 @@ public class MainActivity extends AppCompatActivity
         gv.setAdapter(new GridAdapter());
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @SuppressLint("NewApi")
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-                startActivity(new Intent(getApplicationContext(), Viewimage.class).putExtra("img", list.get(position).toString()));
+                getMimeType(list.get(position).toString());
+                Log.d("", "meme" + getMimeType(list.get(position).toString()));
+                if (Objects.equals(getMimeType(list.get(position).toString()), "video/mp4")) {
+                    startActivity(new Intent(getApplicationContext(), Video_activity.class).putExtra("mp4", list.get(position).toString()));
+                } else {
+                    startActivity(new Intent(getApplicationContext(), Viewimage.class).putExtra("img", list.get(position).toString()));
+
+                }
             }
         });
         // feedback preference click listener
@@ -237,6 +261,9 @@ public class MainActivity extends AppCompatActivity
 
     class GridAdapter extends BaseAdapter {
 
+        public Bitmap bitmap;
+        private android.content.Context context;
+
         @Override
         public int getCount() {
             Log.d("", "getCount: " + list.size());
@@ -258,14 +285,29 @@ public class MainActivity extends AppCompatActivity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.single_grid, parent, false);
-            ImageView iv = convertView.findViewById(R.id.imageView3);
-            iv.setImageURI(Uri.parse(getItem(position).toString()));
+            getMimeType(list.get(position).toString());
+            Log.d(TAG, "getView: " + getMimeType(list.get(position).toString()));
+            if (Objects.equals(getMimeType(list.get(position).toString()), "image/jpeg")) {
+                ImageView iv = convertView.findViewById(R.id.imageView3);
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(list.get(position).toString()), 150, 150);
+                iv.setImageBitmap(ThumbImage);//Creation of Thumbnail of image
+            } else if (Objects.equals(getMimeType(list.get(position).toString()), "video/mp4")) {
+                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(list.get(position).toString(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                ImageView iv = convertView.findViewById(R.id.imageView3);
+                iv.setImageBitmap(bMap);
+            }
 
             return convertView;
+
+
+//            ImageView iv = convertView.findViewById(R.id.imageView3);
+//            iv.setImageURI(Uri.parse(getItem(position).toString()));
+//
+//            return convertView;
         }
+
 
     }
 }

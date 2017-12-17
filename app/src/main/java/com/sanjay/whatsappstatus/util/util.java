@@ -40,5 +40,10 @@ public class util {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
+    public interface ActivityConstants {
+        int ACTIVITY_1 = 1001;
+        int ACTIVITY_2 = 1002;
+        int ACTIVITY_3 = 1003;
+    }
 
 }

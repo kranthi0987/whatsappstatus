@@ -54,7 +54,9 @@
 
         <activity
             android:name=".Video_activity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_video_activity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
