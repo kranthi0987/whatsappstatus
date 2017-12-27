@@ -8,6 +8,9 @@ package com.sanjay.whatsappstatus.util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Build;
 import android.webkit.MimeTypeMap;
 
@@ -40,6 +43,16 @@ public class util {
         return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
     }
 
+    public Bitmap putOverlay(Bitmap bmp1, Bitmap overlay) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmOverlay);
+        Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+
+        canvas.drawBitmap(bmp1, 0, 0, null);
+        canvas.drawBitmap(overlay, 0, 0, null);
+
+        return bmOverlay;
+    }
     public interface ActivityConstants {
         int ACTIVITY_1 = 1001;
         int ACTIVITY_2 = 1002;

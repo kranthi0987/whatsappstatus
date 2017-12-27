@@ -5,6 +5,7 @@
 
 package com.sanjay.whatsappstatus;
 
+import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class Viewimage extends AppCompatActivity {
     private com.github.clans.fab.FloatingActionButton fab2;
     private com.github.clans.fab.FloatingActionButton fab3;
     private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,7 @@ public class Viewimage extends AppCompatActivity {
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
-        
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Storage storage = new Storage(getApplicationContext());
         //Intent i= getIntent();
@@ -64,7 +66,7 @@ public class Viewimage extends AppCompatActivity {
         menuRed = findViewById(R.id.fab);
         fab1 = findViewById(R.id.fab_copy);
         fab2 = findViewById(R.id.fab_delete);
-//        fab3 = findViewById(R.id.fab_share);
+        // fab3 = findViewById(R.id.fab_share);
         FloatingActionMenu fab = findViewById(R.id.fab);
         fab1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,21 +107,26 @@ public class Viewimage extends AppCompatActivity {
                 scanFile(topath1);
             }
         });
-//        fab3.setOnClickListener(new View.OnClickListener() {
-//            @SuppressLint("WrongConstant")
-//            @Override
-//            public void onClick(View view) {
-//                Log.i("share", "fab3 " + f);
-//                Bitmap bmp = BitmapFactory.decodeFile(f);
-//                Intent intent = new Intent(Intent.ACTION_SEND);
-//                intent.setType("image/*");
-//                intent.putExtra(Intent.EXTRA_STREAM, f);
+        //fab3.setOnClickListener(new View.OnClickListener() {
 //
-//                startActivity(Intent.createChooser(intent, "Share Image"));
-//
-//            }
-//        });
+        //         @Override
+        //        public void onClick(View view) {
+        //            Intent in = new Intent(Intent.ACTION_PICK);
+        //            in.setType("image/*");
+        //            startActivityForResult(in, Integer.parseInt(f));
+
+        //        }
+        //    });
     }
+
+    private void shareImage(Uri imagePath) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        sharingIntent.setType("image/*");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, imagePath);
+        startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
+    }
+
     private void scanFile(String path) {
 
         MediaScannerConnection.scanFile(this,
@@ -131,11 +138,13 @@ public class Viewimage extends AppCompatActivity {
                     }
                 });
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
+
     @Override
     public void onBackPressed() {
         setResult(RESULT_OK);

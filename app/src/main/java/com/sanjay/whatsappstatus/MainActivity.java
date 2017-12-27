@@ -6,15 +6,21 @@
 package com.sanjay.whatsappstatus;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +41,9 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.sanjay.whatsappstatus.app.Config;
+import com.sanjay.whatsappstatus.util.NotificationUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     private File[] listFile;
     private AdView mAdView;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -66,6 +76,7 @@ public class MainActivity extends AppCompatActivity
             super.onRestart();
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "");
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
-        Log.d("adrequest", "onCreate: " + adRequest);
+        //Log.d("adrequest", "onCreate: " + adRequest);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -125,9 +136,26 @@ public class MainActivity extends AppCompatActivity
                 Log.d("", "names: "+FileNameStrings[i]);
             }
         }*/
+        //push notification
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+                    String message = intent.getStringExtra("message");
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
 
         list = imageReader(location);
-        Log.d("", "location " + Environment.getExternalStorageDirectory());
+        // Log.d("", "location " + Environment.getExternalStorageDirectory());
         gv = findViewById(R.id.gridview);
         gv.setAdapter(new GridAdapter());
 
@@ -151,19 +179,47 @@ public class MainActivity extends AppCompatActivity
     ArrayList<File> imageReader(File dir) {
         ArrayList<File> a = new ArrayList<>();
         File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                a.addAll(imageReader(files[i]));
-            } else {
-                if (files[i].getName().endsWith(".jpg") ||
-                        files[i].getName().endsWith(".mp4")) {
-                    a.add(files[i]);
-                    Log.d("files", "imageReader: " + files[i]);
+        try {
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    a.addAll(imageReader(files[i]));
+                } else {
+                    if (files[i].getName().endsWith(".jpg") ||
+                            files[i].getName().endsWith(".mp4")) {
+                        a.add(files[i]);
+                        // Log.d("files", "imageReader: " + files[i]);
+                    }
                 }
             }
+            //Log.i("a", "imageReader: " + a);
+        } catch (NullPointerException ex) {
+            Toast.makeText(getApplicationContext(), "no images", Toast.LENGTH_LONG).show();
+
         }
-        Log.i("a", "imageReader: " + a);
         return a;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
     @Override
@@ -176,12 +232,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //    public void refresh(){
-//        this.onResume();
-////        Intent refresh = getIntent();
-////        startActivity(refresh);//Start the same Activity
-////        finish(); //finish Activity.
-//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -203,6 +254,7 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -259,6 +311,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public Bitmap putOverlay(Bitmap bmp1, Bitmap overlay) {
+        Bitmap bmOverlay = Bitmap.createBitmap(bmp1.getWidth(), bmp1.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmOverlay);
+        Paint paint = new Paint(Paint.FILTER_BITMAP_FLAG);
+
+        canvas.drawBitmap(bmp1, 0, 0, null);
+        canvas.drawBitmap(overlay, 0, 0, null);
+
+        return bmOverlay;
+    }
+
     class GridAdapter extends BaseAdapter {
 
         public Bitmap bitmap;
@@ -287,16 +350,17 @@ public class MainActivity extends AppCompatActivity
 
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.single_grid, parent, false);
-            getMimeType(list.get(position).toString());
+            Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_play_arrow_white_24dp);
             Log.d(TAG, "getView: " + getMimeType(list.get(position).toString()));
             if (Objects.equals(getMimeType(list.get(position).toString()), "image/jpeg")) {
                 ImageView iv = convertView.findViewById(R.id.imageView3);
-                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(list.get(position).toString()), 150, 150);
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(list.get(position).toString()), 100, 100);
                 iv.setImageBitmap(ThumbImage);//Creation of Thumbnail of image
             } else if (Objects.equals(getMimeType(list.get(position).toString()), "video/mp4")) {
                 Bitmap bMap = ThumbnailUtils.createVideoThumbnail(list.get(position).toString(), MediaStore.Video.Thumbnails.MICRO_KIND);
                 ImageView iv = convertView.findViewById(R.id.imageView3);
-                iv.setImageBitmap(bMap);
+//                putOverlay(bMap,largeIcon);
+                iv.setImageBitmap(putOverlay(bMap, largeIcon));
             }
 
             return convertView;
@@ -310,4 +374,5 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+
 }

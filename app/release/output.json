@@ -6,13 +6,13 @@
     "apkInfo": {
       "type": "MAIN",
       "splits": [],
-      "versionCode": 2
+      "versionCode": 5
     },
     "path": "app-release.apk",
     "properties": {
       "packageId": "com.sanjay.whatsappstatus",
       "split": "",
-      "minSdkVersion": "15"
+      "minSdkVersion": "16"
     }
   }
 ]

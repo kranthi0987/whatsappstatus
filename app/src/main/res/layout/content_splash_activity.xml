@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="130dp"
-        android:layout_height="123dp"
+        android:layout_width="113dp"
+        android:layout_height="99dp"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
