@@ -8,7 +8,7 @@ buildscript {
     }
 }
 /*
- * Copyright (c) 2017. this file is created or edited by sanjay
+ * Copyright (c) 2018. this file is created or edited by sanjay
  * mail us to kranthi0987@gmail.com
  */
 
@@ -53,15 +53,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    compile 'gun0912.ted:tedpermission:2.1.0'
-    compile 'com.github.traex.rippleeffect:library:1.3'
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.github.javiersantos:AppUpdater:2.6.4'
-    compile 'com.snatik:storage:2.1.0'
-    compile 'com.github.clans:fab:1.6.4'
-    compile 'im.ene.toro3:toro:3.2.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+    implementation 'gun0912.ted:tedpermission:2.1.0'
+    implementation 'com.github.traex.rippleeffect:library:1.3'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.github.javiersantos:AppUpdater:2.6.4'
+    implementation 'com.snatik:storage:2.1.0'
+    implementation 'com.github.clans:fab:1.6.4'
+    implementation 'im.ene.toro3:toro:3.2.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true
 
     }

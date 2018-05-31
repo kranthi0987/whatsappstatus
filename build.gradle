@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017. this file is created or edited by sanjay
+ * Copyright (c) 2018. this file is created or edited by sanjay
  * mail us to kranthi0987@gmail.com
  */
 
@@ -13,7 +13,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         
 
         // NOTE: Do not place your application dependencies here; they belong
